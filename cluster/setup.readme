@@ -1,0 +1,6 @@
+1- add hostnames to /etc/hosts
+  192.168.10.128 wazuh-ccs.argus.local wazuh-ccs
+  192.168.10.130 cluster-a.argus.local cluster-a
+  192.168.10.131 cluster-b.argus.local cluster-b
+2- sudo su
+3- run setup-cluster-a.sh
