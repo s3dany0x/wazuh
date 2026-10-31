@@ -37,6 +37,9 @@ systemctl daemon-reload
 systemctl enable wazuh-indexer
 systemctl start wazuh-indexer
 
+until curl -sk https://wazuh-ccs.argus.local:9200 >/dev/null; do sleep 5; done
+sleep 10
+
 /usr/share/wazuh-indexer/bin/indexer-security-init.sh;
 curl -k -u admin:admin https://cluster-b.argus.local:9200;
 echo "-----------------------------Test Indexer Done-----------------------------";
