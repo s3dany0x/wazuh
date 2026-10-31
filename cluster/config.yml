@@ -1,0 +1,23 @@
+nodes:
+  # Wazuh indexer nodes
+  indexer:
+    - name: ca-wazuh-indexer
+      ip: "cluster-a.argus.local"
+    #- name: node-2
+    #  ip: "<indexer-node-ip>"
+    #- name: node-3
+    #  ip: "<indexer-node-ip>"
+
+  # Wazuh server nodes
+  # If there is more than one Wazuh server
+  # node, each one must have a node_type
+  server:
+    - name: ca-wazuh-server
+      ip: "cluster-a.argus.local"
+    #  node_type: master
+    #- name: wazuh-2
+    #  ip: "<wazuh-manager-ip>"
+    #  node_type: worker
+    #- name: wazuh-3
+    #  ip: "<wazuh-manager-ip>"
+    #  node_type: worker
