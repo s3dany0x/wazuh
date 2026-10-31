@@ -5,7 +5,7 @@ cd /home/argus/wazuh
 
 		#install certs and config
 curl -sO https://packages.wazuh.com/4.14/wazuh-certs-tool.sh
-wget https://raw.githubusercontent.com/s3dany0x/wazuh/refs/heads/main/cluster/config.yml;
+wget https://raw.githubusercontent.com/s3dany0x/wazuh/refs/heads/main/cluster-b/config.yml;
 bash ./wazuh-certs-tool.sh -A ./root-ca.pem ./root-ca.key;
 tar -cvf ./wazuh-certificates.tar -C ./wazuh-certificates/ .
 rm -rf ./wazuh-certificates
@@ -21,7 +21,7 @@ apt-get update
 apt install wazuh-indexer;
 
 		# install indexer config
-wget -O /etc/wazuh-indexer/opensearch.yml https://raw.githubusercontent.com/s3dany0x/wazuh/refs/heads/main/cluster/indexer/opensearch.yml
+wget -O /etc/wazuh-indexer/opensearch.yml https://raw.githubusercontent.com/s3dany0x/wazuh/refs/heads/main/cluster-b/indexer/opensearch.yml
 
 		# deploy certs and run indexer
 NODE_NAME=cb-wazuh-indexer
@@ -46,7 +46,7 @@ echo "-----------------------------Test Indexer Done----------------------------
 apt-get -y install wazuh-manager filebeat ;
 curl -so /etc/filebeat/filebeat.yml https://packages.wazuh.com/4.14/tpl/wazuh/filebeat/filebeat.yml
 
-wget -O /etc/filebeat/filebeat.yml https://raw.githubusercontent.com/s3dany0x/wazuh/refs/heads/main/cluster/server/filebeat.yml
+wget -O /etc/filebeat/filebeat.yml https://raw.githubusercontent.com/s3dany0x/wazuh/refs/heads/main/cluster-b/server/filebeat.yml
 
 filebeat keystore create
 echo admin | filebeat keystore add username --stdin --force
@@ -69,7 +69,7 @@ chown -R root:root /etc/filebeat/certs
 /var/ossec/bin/wazuh-keystore -f indexer -k username -v admin
 /var/ossec/bin/wazuh-keystore -f indexer -k password -v admin
 
-wget -O /var/ossec/etc/ossec.conf https://raw.githubusercontent.com/s3dany0x/wazuh/refs/heads/main/cluster/server/ossec.conf
+wget -O /var/ossec/etc/ossec.conf https://raw.githubusercontent.com/s3dany0x/wazuh/refs/heads/main/cluster-b/server/ossec.conf
 
 systemctl daemon-reload
 systemctl enable wazuh-manager filebeat
