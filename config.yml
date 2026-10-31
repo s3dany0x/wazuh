@@ -2,7 +2,7 @@ nodes:
   # Wazuh indexer nodes
   indexer:
     - name: ccs-wazuh-indexer
-      ip: "wazuh-ccs"
+      ip: "wazuh-ccs.argus.local"
     #- name: node-2
     #  ip: "<indexer-node-ip>"
     #- name: node-3
@@ -12,4 +12,4 @@ nodes:
   # Wazuh dashboard nodes
   dashboard:
     - name: ccs-wazuh-dashboard
-      ip: "wazuh-ccs"
+      ip: "wazuh-ccs.argus.local"
