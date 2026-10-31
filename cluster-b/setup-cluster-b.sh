@@ -18,7 +18,7 @@ curl -s https://packages.wazuh.com/key/GPG-KEY-WAZUH | gpg --no-default-keyring 
 echo "deb [signed-by=/usr/share/keyrings/wazuh.gpg] https://packages.wazuh.com/4.x/apt/ stable main" | tee /etc/apt/sources.list.d/wazuh.list
 apt-get update
 
-apt install wazuh-indexer;
+apt install -y wazuh-indexer;
 
 		# install indexer config
 wget -O /etc/wazuh-indexer/opensearch.yml https://raw.githubusercontent.com/s3dany0x/wazuh/refs/heads/main/cluster-b/indexer/opensearch.yml
