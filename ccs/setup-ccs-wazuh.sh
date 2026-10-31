@@ -76,4 +76,5 @@ cd /home/argus/wazuh
 
 systemctl restart wazuh-dashboard
 
+echo "___________________ install done. ___________________"
 
