@@ -9,7 +9,7 @@ wget https://raw.githubusercontent.com/s3dany0x/wazuh/refs/heads/main/config.yml
 bash ./wazuh-certs-tool.sh -A;
 
 scp -r wazuh-certificates/root-ca.* argus@cluster-a.argus.local:/home/argus/wazuh;
-scp -r wazuh-certificates/root-cb.* argus@cluster-a.argus.local:/home/argus/wazuh;
+scp -r wazuh-certificates/root-cb.* argus@cluster-b.argus.local:/home/argus/wazuh;
 
 tar -cvf ./wazuh-certificates.tar -C ./wazuh-certificates/ .
 rm -rf ./wazuh-certificates
