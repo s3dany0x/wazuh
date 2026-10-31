@@ -5,7 +5,7 @@ cd /home/argus/wazuh
 
 		#install certs and config
 curl -sO https://packages.wazuh.com/4.14/wazuh-certs-tool.sh;
-wget https://raw.githubusercontent.com/s3dany0x/wazuh/refs/heads/main/config.yml;
+wget https://raw.githubusercontent.com/s3dany0x/wazuh/refs/heads/main/ccs/config.yml;
 bash ./wazuh-certs-tool.sh -A;
 
 scp -r wazuh-certificates/root-ca.* argus@cluster-a.argus.local:/home/argus/wazuh;
@@ -25,7 +25,7 @@ apt install -y wazuh-indexer;
 
 		# install indexer config
 cd /etc/wazuh-indexer/
-wget https://raw.githubusercontent.com/s3dany0x/wazuh/refs/heads/main/ccs/indexer/opensearch.yml;
+wget -O /etc/wazuh-indexer/opensearch.yml https://raw.githubusercontent.com/s3dany0x/wazuh/refs/heads/main/ccs/indexer/opensearch.yml;
 cd /home/argus/wazuh
 
 		# deploy certs and run indexer
@@ -42,6 +42,8 @@ systemctl daemon-reload
 systemctl enable wazuh-indexer
 systemctl start wazuh-indexer
 
+until curl -sk https://wazuh-ccs.argus.local:9200 >/dev/null; do sleep 5; done
+sleep 10
 /usr/share/wazuh-indexer/bin/indexer-security-init.sh;
 curl -k -u admin:admin https://wazuh-ccs.argus.local:9200;
 echo "-----------------------------Test Indexer Done-----------------------------";
@@ -52,7 +54,7 @@ apt-get install -y debhelper tar curl libcap2-bin
 apt-get -y install wazuh-dashboard
 
 cd /etc/wazuh-dashboard/
-wget https://raw.githubusercontent.com/s3dany0x/wazuh/refs/heads/main/ccs/dashboard/opensearch_dashboards.yml
+wget -O /etc/wazuh-dashboard/opensearch_dashboards.yml https://raw.githubusercontent.com/s3dany0x/wazuh/refs/heads/main/ccs/dashboard/opensearch_dashboards.yml
 cd /home/argus/wazuh
 
 		# deploy certs and run dashboard
@@ -71,7 +73,8 @@ systemctl start wazuh-dashboard
 
 		#add clusters apis 
 cd /usr/share/wazuh-dashboard/data/wazuh/config/
-wget https://raw.githubusercontent.com/s3dany0x/wazuh/refs/heads/main/ccs/dashboard/wazuh.yml
+until [ -f /usr/share/wazuh-dashboard/data/wazuh/config/wazuh.yml ]; do sleep 3; done
+wget -O /usr/share/wazuh-dashboard/data/wazuh/config/wazuh.yml https://raw.githubusercontent.com/s3dany0x/wazuh/refs/heads/main/ccs/dashboard/wazuh.yml
 cd /home/argus/wazuh
 
 systemctl restart wazuh-dashboard
