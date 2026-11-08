@@ -1,0 +1,13 @@
+IP=<cluster-b.argus.local>
+PASS=admin
+
+# أ) اعمل الـ policy
+curl -k -u admin:$PASS -X PUT "https://$IP:9200/_plugins/_ism/policies/wazuh-alert-retention-policy" \
+  -H 'Content-Type: application/json' -d @policy.json
+
+# ب) طبّقها على الـ indices الموجودة
+curl -k -u admin:$PASS -X POST "https://$IP:9200/_plugins/_ism/add/wazuh-alerts-*" \
+  -H 'Content-Type: application/json' -d '{"policy_id":"wazuh-alert-retention-policy"}'
+
+# ج) اتأكد
+curl -k -u admin:$PASS "https://$IP:9200/_plugins/_ism/explain/wazuh-alerts-*?pretty"
