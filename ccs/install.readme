@@ -4,3 +4,5 @@
   192.168.10.131 cluster-b.argus.local cluster-b
 2- sudo su
 3- run setup-ccs-wazuh.sh
+4- edit indexers and set roles
+5- install Shuffle 
