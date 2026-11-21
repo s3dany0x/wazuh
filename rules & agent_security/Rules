@@ -1,0 +1,21 @@
+// File Monitoring
+<group name="syscheck,fim_monitored_paths,">
+  <rule id="100204" level="10">
+    <if_sid>550, 553, 554</if_sid>
+    <description>FIM change detected </description>
+    <group>fim_critical,</group>
+  </rule>
+</group>
+
+// Brute Force logon
+<group name="windows,authentication_failures,brute_force,">
+  <rule id="100210" level="12" frequency="3" timeframe="120">
+    <if_matched_sid>60122</if_matched_sid>
+    <same_field>win.eventdata.targetUserName</same_field>
+    <description>Windows: 3 failed logon within 2 minutes</description>
+    <mitre>
+      <id>T1110</id>
+    </mitre>
+    <group>authentication_failures,attack,</group>
+  </rule>
+</group>
