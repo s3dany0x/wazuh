@@ -1,0 +1,36 @@
+# 1- Download Docker and Docker Compose
+  sudo apt update && sudo apt install -y git docker.io docker-compose-v2
+  sudo systemctl enable --now docker
+  sudo usermod -aG docker $USER
+  newgrp docker
+
+# 2- Prepare OpenSearch for shuffle
+  sudo sysctl -w vm.max_map_count=262144
+  echo "vm.max_map_count=262144" | sudo tee -a /etc/sysctl.conf
+
+# 3- install shuffle
+  git clone https://github.com/Shuffle/Shuffle
+  cd Shuffle
+  mkdir -p shuffle-database
+  sudo chown -R 1000:1000 shuffle-database
+
+# 4- Required changes in docker-compose.yml:
+
+Open the file (vim docker-compose.yml or nano docker-compose.yml) and update these two items under the opensearch service:
+Reduce the Java Heap Size to 512m:
+Change:
+YAML
+- "OPENSEARCH_JAVA_OPTS=-Xms3072m -Xmx3072m"
+To:
+YAML
+- "OPENSEARCH_JAVA_OPTS=-Xms512m -Xmx512m"
+(You can increase it to 768m or 1024m later if system RAM allows, but 512m is safe for starting alongside Wazuh).
+Comment out (#) the ports block for 9200:9200:
+Update the lines as follows (preserving indentation):
+YAML
+# ports:
+#   - 9200:9200
+
+# 5- run shuffle
+  docker compose up -d
+  docker compose ps && free -h
