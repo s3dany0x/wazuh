@@ -1,0 +1,62 @@
+// install and check
+cd ~
+git clone https://github.com/StrangeBeeCorp/docker.git
+cd docker/prod1-thehive
+cat docker-compose.yml
+cat dot.env.template
+cat nginx/templates/default.conf.template
+
+//
+cd ~/docker/prod1-thehive
+cp docker-compose.yml docker-compose.yml.orig
+
+# 1) بورت Nginx
+sed -i "s/- '443:443'/- '8443:443'/" docker-compose.yml
+
+# 2) heaps: كل خدمة 2 GB
+sed -i 's/MAX_HEAP_SIZE=3G/MAX_HEAP_SIZE=2G/' docker-compose.yml
+sed -i 's/-Xms3G -Xmx3G/-Xms2G -Xmx2G/' docker-compose.yml
+sed -i 's/-Xms3000M/-Xms2000M/; s/-Xmx3000M/-Xmx2000M/' docker-compose.yml
+
+# 3) حدود الذاكرة: 3.5 GB بدل 4 GB
+sed -i 's/memory: 4G/memory: 3500M/; s/memswap_limit: 4G/memswap_limit: 3500M/' docker-compose.yml
+
+
+
+
+1) تأكد من الـ CPU وشوف الإصدارات
+bash
+cd ~/docker/prod1-thehive
+nproc
+cat ../versions.env
+df -h /
+
+nproc لازم يطلع 4. ولو لسه 2، يبقى الـ VM محتاجة إعادة تشغيل بعد تغيير الـ CPU.
+
+2) التهيئة
+bash
+bash ./scripts/init.sh
+
+عند سؤال Server Name اكتب 192.168.10.128. ولو سألك عن الصلاحيات وافق.
+
+3) تأكد إن .env اتعمل (من غير ما تعرض الباسورد)
+bash
+grep -v -i password .env
+ls -la thehive/config certificates
+4) اختبر الـ compose من غير تشغيل
+bash
+docker compose config > /dev/null && echo "compose OK"
+5) نزّل الصور وشوف المساحة
+bash
+docker compose pull
+df -h /
+docker system df
+
+لو المتاح بعد الـ pull أقل من 3 GB، وقّف ووسّع الديسك قبل ما تكمل.
+
+6) التشغيل
+bash
+docker compose up -d
+watch -n 5 'docker compose ps; echo; free -h'
+
+استنى لحد ما الأربع حاويات (cassandra و elasticsearch و thehive و nginx) تبقى healthy/Up (حوالي 2-4 دقايق)، وبعدين اخرج بـ Ctrl+C.
